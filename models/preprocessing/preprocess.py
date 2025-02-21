@@ -1,15 +1,17 @@
+import os
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 def load_raw_data(data_dir):
     """Load raw data from the 'data/raw' directory."""
     # Load user survey data
-    user_surveys = pd.read_csv(f"{data_dir}/raw/user_surveys/surveys.csv")
+    user_surveys = pd.read_csv(os.path.join(data_dir, 'raw', 'user_surveys', 'surveys.csv'))
     
     # Load user interview transcripts
-    user_interviews = pd.read_csv(f"{data_dir}/raw/user_interviews/interviews.csv")
+    user_interviews = pd.read_csv(os.path.join(data_dir, 'raw', 'user_interviews', 'interviews.csv'))
     
     # Load user interaction logs
-    user_logs = pd.read_csv(f"{data_dir}/raw/user_interaction_logs/logs.csv")
+    user_logs = pd.read_csv(os.path.join(data_dir, 'raw', 'user_interaction_logs', 'logs.csv'))
     
     return user_surveys, user_interviews, user_logs
 
@@ -22,6 +24,10 @@ def preprocess_data(user_surveys, user_interviews, user_logs):
     
     # Combine the preprocessed data
     preprocessed_data = pd.concat([user_surveys, user_interviews, user_logs], axis=1)
+    
+    # Standardize the data
+    scaler = StandardScaler()
+    preprocessed_data = scaler.fit_transform(preprocessed_data)
     
     return preprocessed_data
 
